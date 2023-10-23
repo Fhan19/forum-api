@@ -5,8 +5,7 @@ describe('an AddThread entities', () => {
     // Arrange
     const payload = {
       title: 'sebuah thread',
-      body: 'bagaimana mungkin',
-      owner: 'user-123'
+      body: 'bagaimana mungkin'
     }
 
     // Action and Assert
