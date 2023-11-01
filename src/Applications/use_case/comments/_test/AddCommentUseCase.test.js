@@ -1,17 +1,18 @@
-const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
-const CommentRepository = require('../../../Domains/comments/CommentRepository')
-const AddedComment = require('../../../Domains/comments/entities/AddedComment')
-const NewComment = require('../../../Domains/comments/entities/NewComment')
-const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
+const NotFoundError = require('../../../../Commons/exceptions/NotFoundError')
+const CommentRepository = require('../../../../Domains/comments/CommentRepository')
+const AddedComment = require('../../../../Domains/comments/entities/AddedComment')
+const AddComment = require('../../../../Domains/comments/entities/AddComment')
+const ThreadRepository = require('../../../../Domains/threads/ThreadRepository')
 const AddCommentUseCase = require('../AddCommentUseCase')
 
 describe('AddCommentUseCase', () => {
   it('should throw error when thread not exists', async () => {
     // Arrange
     const useCasePayload = {
+      owner: 'user-123',
       threadId: 'thread-xxx',
-      content: 'wkwkwkwk',
-      owner: 'user-123'
+      date: new Date().toISOString(),
+      content: 'wkwkwkwk'
     }
 
     const mockAddedComment = new AddedComment({
@@ -34,16 +35,17 @@ describe('AddCommentUseCase', () => {
     // Action & Assert
     await expect(() => addCommentUseCase.execute(useCasePayload))
       .rejects.toThrowError(NotFoundError)
-    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith('thread-123')
+    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith('thread-xxx')
     expect(mockCommentRepository.addComment).not.toBeCalled()
   })
 
   it('should orchestrating the add comment action correctly', async () => {
     // Arrange
     const useCasePayload = {
-      threadId: 'thread-123',
-      content: 'wkwkwk',
-      owner: 'user-123'
+      owner: 'user-123',
+      threadId: 'thread-xxx',
+      date: new Date().toISOString(),
+      content: 'wkwkwkwk'
     }
 
     const mockAddedComment = new AddedComment({
@@ -67,13 +69,14 @@ describe('AddCommentUseCase', () => {
     const addedComment = await addCommentUseCase.execute(useCasePayload)
 
     // Assert
-    expect(mockCommentRepository.addComment).toBeCalledWith(new NewComment({
-      threadId: 'thread-123',
-      content: 'wkwkwk',
-      owner: 'user-123'
+    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(useCasePayload.threadId)
+    expect(mockCommentRepository.addComment).toBeCalledWith(new AddComment({
+      owner: useCasePayload.owner,
+      threadId: useCasePayload.threadId,
+      date: useCasePayload.date,
+      content: useCasePayload.content
     }))
-    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith('thread-123')
-    expect(addedComment).toEqual(new AddedComment({
+    expect(addedComment).toStrictEqual(new AddedComment({
       id: 'comment-123',
       content: useCasePayload.content,
       owner: useCasePayload.owner

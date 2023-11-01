@@ -1,20 +1,13 @@
-const DeleteComment = require('../../Domains/comments/entities/DeleteComment')
-
-/* eslint-disable class-methods-use-this */
 class DeleteCommentUseCase {
-  constructor ({
-    threadRepository,
-    commentRepository
-  }) {
-    this._threadRepository = threadRepository
+  constructor ({ commentRepository, threadRepository }) {
     this._commentRepository = commentRepository
+    this._threadRepository = threadRepository
   }
 
   async execute (useCasePayload) {
-    const { threadId, commentId, owner } = new DeleteComment(useCasePayload)
-    await this._commentRepository.verifyCommentOwner(commentId, owner)
-    await this._threadRepository.verifyThreadExists(threadId)
-    await this._commentRepository.deleteComment(commentId)
+    await this._commentRepository.verifyCommentOwner(useCasePayload.commentId, useCasePayload.owner)
+    await this._threadRepository.verifyThreadExists(useCasePayload.threadId)
+    await this._commentRepository.deleteComment(useCasePayload.commentId)
   }
 }
 

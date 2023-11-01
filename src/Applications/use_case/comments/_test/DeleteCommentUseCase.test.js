@@ -1,5 +1,5 @@
-const CommentRepository = require('../../../Domains/comments/CommentRepository')
-const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
+const CommentRepository = require('../../../../Domains/comments/CommentRepository')
+const ThreadRepository = require('../../../../Domains/threads/ThreadRepository')
 const DeleteCommentUseCase = require('../DeleteCommentUseCase')
 
 describe('DeleteCommentUseCase', () => {
@@ -18,16 +18,16 @@ describe('DeleteCommentUseCase', () => {
     mockThreadRepository.verifyThreadExists = jest.fn(() => Promise.resolve())
 
     const deleteCommentUseCase = new DeleteCommentUseCase({
-      threadRepository: mockThreadRepository,
-      commentRepository: mockCommentRepository
+      commentRepository: mockCommentRepository,
+      threadRepository: mockThreadRepository
     })
 
     // Action
     await deleteCommentUseCase.execute(useCasePayload)
 
     // Assert
-    expect(mockCommentRepository.verifyCommentOwner).toBeCalledWith('comment-123', 'user-123')
-    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith('thread-123')
-    expect(mockCommentRepository.deleteComment).toBeCalledWith('comment-123')
+    expect(mockCommentRepository.verifyCommentOwner).toBeCalledWith(useCasePayload.commentId, useCasePayload.owner)
+    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(useCasePayload.threadId)
+    expect(mockCommentRepository.deleteComment).toBeCalledWith(useCasePayload.commentId)
   })
 })

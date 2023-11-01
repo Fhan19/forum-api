@@ -17,7 +17,9 @@ describe('a DetailReply entities', () => {
     // Arrange
     const payload = {
       id: 123,
-      username: 'Hihi',
+      owner: 'user-123',
+      commentId: 'comment-123',
+      date: new Date().toISOString(),
       content: 'wkwkwk',
       isDelete: false
     }
@@ -30,19 +32,21 @@ describe('a DetailReply entities', () => {
     // Arrange
     const payload = {
       id: 'reply-123',
-      username: 'Hoho',
+      owner: 'user-123',
+      commentId: 'comment-123',
+      date: new Date().toISOString(),
       content: 'wkwkwk',
       isDelete: true
     }
 
     // Action
     const {
-      id, content, username
+      id, content, owner
     } = new DetailReply(payload)
 
     // Assert
     expect(id).toEqual(payload.id)
     expect(content).toEqual(DetailReply.DELETED_REPLY_CONTENT)
-    expect(username).toEqual(payload.username)
+    expect(owner).toEqual(payload.owner)
   })
 })

@@ -5,16 +5,16 @@ class DetailComment {
     this._verifyPayload(payload)
 
     const {
-      id, content, username, isDelete, replies
+      id, owner, threadId, date, content, isDelete, replies
     } = payload
 
     this.id = id
+    this.owner = owner
+    this.threadId = threadId
+    this.date = date
     this.content = (isDelete) ? DetailComment.DELETED_CONTENT_COMMENT : content
-    this.username = username
     this.replies = replies
   }
-
-  // static get DELETED_CONTENT_COMMENT() { return '**komentar telah dihapus**'; }
 
   _verifyPayload (payload) {
     if (this._isPayloadNotContainNeededProperty(payload)) {
@@ -26,20 +26,18 @@ class DetailComment {
     }
   }
 
-  _isPayloadNotContainNeededProperty ({
-    id, content, username, isDelete, replies
-  }) {
-    return !id || !content || !username || isDelete === undefined || !replies
+  _isPayloadNotContainNeededProperty ({ id, owner, threadId, date, content, isDelete, replies }) {
+    return !id || !owner || !threadId || !date || !content || isDelete === undefined || !replies
   }
 
-  _isPayloadNotMeetDataTypeSpecification ({
-    id, content, date, username, isDelete, replies
-  }) {
+  _isPayloadNotMeetDataTypeSpecification ({ id, owner, threadId, date, content, isDelete, replies }) {
     return typeof id !== 'string' ||
-        typeof content !== 'string' ||
-        typeof username !== 'string' ||
-        typeof isDelete !== 'boolean' ||
-        !(replies instanceof Array)
+      typeof owner !== 'string' ||
+      typeof threadId !== 'string' ||
+      typeof date !== 'string' ||
+      typeof content !== 'string' ||
+      typeof isDelete !== 'boolean' ||
+      !(replies instanceof Array)
   }
 }
 

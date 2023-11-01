@@ -1,48 +1,47 @@
-const NewReply = require('../NewReply')
+const AddReply = require('../AddReply')
 
 describe('an AddReply entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
     const payload = {
-      threadId: 'abc',
       commentId: 'abc',
       content: 'abc'
     }
 
     // Action and Assert
-    expect(() => new NewReply(payload)).toThrowError('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY')
+    expect(() => new AddReply(payload)).toThrowError('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY')
   })
 
   it('should throw error when payload did not meet data type specification', () => {
     // Arrange
     const payload = {
       owner: true,
-      threadId: 'abc',
+      date: 'abc',
       commentId: 'abc',
       content: 'abc'
     }
 
     // Action and Assert
-    expect(() => new NewReply(payload)).toThrowError('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION')
+    expect(() => new AddReply(payload)).toThrowError('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION')
   })
 
-  it('should create newReply object correctly', () => {
+  it('should create AddReply object correctly', () => {
     // Arrange
     const payload = {
       owner: 'user-123',
-      threadId: 'thread-123',
       commentId: 'comment-123',
+      date: new Date().toISOString(),
       content: 'abc'
     }
 
     // Action
     const {
-      owner, threadId, commentId, content
-    } = new NewReply(payload)
+      owner, date, commentId, content
+    } = new AddReply(payload)
 
     // Assert
     expect(owner).toEqual(payload.owner)
-    expect(threadId).toEqual(payload.threadId)
+    expect(date).toEqual(payload.date)
     expect(commentId).toEqual(payload.commentId)
     expect(content).toEqual(payload.content)
   })

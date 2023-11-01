@@ -10,7 +10,7 @@ class AddThread {
   }
 
   _verifyPayload ({ title, body, owner }) {
-    if (!title || !body || owner) {
+    if (!title || !body || !owner) {
       throw new Error('THREAD.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 

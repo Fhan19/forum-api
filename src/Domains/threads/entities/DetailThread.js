@@ -3,13 +3,14 @@ class DetailThread {
     this._verifyPayload(payload)
 
     const {
-      id, title, body, username, comments
+      id, owner, date, title, content, comments
     } = payload
 
     this.id = id
+    this.owner = owner
+    this.date = date
     this.title = title
-    this.body = body
-    this.username = username
+    this.content = content
     this.comments = comments
   }
 
@@ -23,22 +24,17 @@ class DetailThread {
     }
   }
 
-  _isPayloadNotContainNeededProperty ({
-    id, title, body, username, comments
-  }) {
-    return !id || !title || !body || !username || !comments || !comments[0].replies
+  _isPayloadNotContainNeededProperty ({ id, owner, date, title, content, comments }) {
+    return !id || !owner || !date || !title || !content || !comments
   }
 
-  _isPayloadNotMeetDataTypeSpecification ({
-    id, title, body, date, username, comments
-  }) {
+  _isPayloadNotMeetDataTypeSpecification ({ id, owner, date, title, content, comments }) {
     return typeof id !== 'string' ||
-      typeof title !== 'string' ||
-      typeof body !== 'string' ||
-      typeof date !== 'string' ||
-      typeof username !== 'string' ||
-      !(comments instanceof Array) ||
-      !(comments[0].replies instanceof Array)
+    typeof owner !== 'string' ||
+    typeof date !== 'string' ||
+    typeof title !== 'string' ||
+    typeof content !== 'string' ||
+    !(comments instanceof Array)
   }
 }
 

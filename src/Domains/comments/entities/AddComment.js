@@ -1,27 +1,28 @@
-class AddComment {
+class NewComment {
   constructor (payload) {
     this._verifyPayload(payload)
 
     const {
-      content, threadId, owner
+      owner, threadId, date, content
     } = payload
 
-    this.content = content
-    this.threadId = threadId
     this.owner = owner
+    this.threadId = threadId
+    this.date = date
+    this.content = content
   }
 
   _verifyPayload ({
-    content, threadId, owner, date
+    owner, threadId, date, content
   }) {
-    if (!content || !threadId || !owner) {
+    if (!owner || !threadId || !date || !content) {
       throw new Error('NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
-    if (typeof content !== 'string' || typeof threadId !== 'string' || typeof owner !== 'string') {
+    if (typeof owner !== 'string' || typeof threadId !== 'string' || typeof date !== 'string' || typeof content !== 'string') {
       throw new Error('NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }
 }
 
-module.exports = AddComment
+module.exports = NewComment
