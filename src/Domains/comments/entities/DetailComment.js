@@ -5,12 +5,11 @@ class DetailComment {
     this._verifyPayload(payload)
 
     const {
-      id, owner, threadId, date, content, isDelete, replies
+      id, username, date, content, is_delete: isDelete, replies
     } = payload
 
     this.id = id
-    this.owner = owner
-    this.threadId = threadId
+    this.username = username
     this.date = date
     this.content = (isDelete) ? DetailComment.DELETED_CONTENT_COMMENT : content
     this.replies = replies
@@ -26,14 +25,13 @@ class DetailComment {
     }
   }
 
-  _isPayloadNotContainNeededProperty ({ id, owner, threadId, date, content, isDelete, replies }) {
-    return !id || !owner || !threadId || !date || !content || isDelete === undefined || !replies
+  _isPayloadNotContainNeededProperty ({ id, username, date, content, is_delete: isDelete, replies }) {
+    return !id || !username || !date || !content || isDelete === undefined || !replies
   }
 
-  _isPayloadNotMeetDataTypeSpecification ({ id, owner, threadId, date, content, isDelete, replies }) {
+  _isPayloadNotMeetDataTypeSpecification ({ id, username, date, content, is_delete: isDelete, replies }) {
     return typeof id !== 'string' ||
-      typeof owner !== 'string' ||
-      typeof threadId !== 'string' ||
+      typeof username !== 'string' ||
       typeof date !== 'string' ||
       typeof content !== 'string' ||
       typeof isDelete !== 'boolean' ||

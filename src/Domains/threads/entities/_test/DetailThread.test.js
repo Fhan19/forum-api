@@ -18,7 +18,7 @@ describe('a DetailThread entities', () => {
     // Arrange
     const payload = {
       id: 123,
-      owner: 'user-123',
+      username: 'hehe',
       date: new Date().toISOString(),
       title: 'sebuah thread',
       content: 'aowkawokaowk',
@@ -35,7 +35,7 @@ describe('a DetailThread entities', () => {
     // Arrange
     const payload = {
       id: 'thread-123',
-      owner: 'user-123',
+      username: 'haha',
       date: new Date().toISOString(),
       title: 'sebuah thread',
       content: 'aowkawokaowk',

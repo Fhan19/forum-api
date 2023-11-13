@@ -54,7 +54,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async getCommentsByThreadId (threadId) {
     const query = {
-      text: `SELECT comments.id, comments.date, comments.content, comments.is_delete, users.username,
+      text: `SELECT comments.id, comments.date, comments.content, comments.is_delete, users.username
           FROM comments
           LEFT JOIN users ON comments.owner = users.id
           WHERE comments.thread_id = $1 GROUP BY comments.id, users.username ORDER BY comments.date ASC`,
@@ -63,7 +63,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const results = await this._pool.query(query)
 
-    return results.rows.map((result) => new DetailComment({ ...result }))
+    return results.rows.map((result) => new DetailComment({ ...result, replies: [] }))
   }
 
   async verifyCommentExists (id) {

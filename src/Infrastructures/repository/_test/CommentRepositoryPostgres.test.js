@@ -4,8 +4,8 @@ const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError')
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
 const AddedComment = require('../../../Domains/comments/entities/AddedComment')
-const Comment = require('../../../Domains/comments/entities/Comment')
-const NewComment = require('../../../Domains/comments/entities/NewComment')
+const DetailComment = require('../../../Domains/comments/entities/DetailComment')
+const AddComment = require('../../../Domains/comments/entities/AddComment')
 const pool = require('../../database/postgres/pool')
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
 
@@ -25,9 +25,10 @@ describe('CommentRepositoryPostgres', () => {
       // Arrange
       await UsersTableTestHelper.addUser({ username: 'dicoding' })
       await ThreadsTableTestHelper.addThread({ title: 'sebuah thread' })
-      const newComment = new NewComment({
+      const newComment = new AddComment({
         threadId: 'thread-123',
         content: 'sebuah komentar',
+        date: new Date().toISOString(),
         owner: 'user-123'
       })
       const fakeIdGenerator = () => '123'
@@ -37,7 +38,7 @@ describe('CommentRepositoryPostgres', () => {
       await commentRepositoryPostgres.addComment(newComment)
 
       // Assert
-      const comment = await CommentsTableTestHelper.findCommentById('comment-123')
+      const comment = await CommentsTableTestHelper.findCommentsById('comment-123')
       expect(comment).toHaveLength(1)
     })
 
@@ -46,9 +47,10 @@ describe('CommentRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({ username: 'dicoding' })
       await ThreadsTableTestHelper.addThread({ title: 'sebuah thread' })
 
-      const newComment = new NewComment({
+      const newComment = new AddComment({
         threadId: 'thread-123',
         content: 'bagaimana mungkin',
+        date: new Date().toISOString(),
         owner: 'user-123'
       })
       const fakeIdGenerator = () => '123'
@@ -75,7 +77,7 @@ describe('CommentRepositoryPostgres', () => {
       await expect(commentRepositoryPostgres.deleteComment('comment-123'))
         .rejects
         .toThrowError(NotFoundError)
-      const comment = await CommentsTableTestHelper.findCommentById('comment-123')
+      const comment = await CommentsTableTestHelper.findCommentsById('comment-123')
       expect(comment[0]).toBeUndefined()
     })
 
@@ -91,9 +93,9 @@ describe('CommentRepositoryPostgres', () => {
       await commentRepositoryPostgres.deleteComment('comment-123')
 
       // Assert
-      const comment = await CommentsTableTestHelper.findCommentById('comment-123')
+      const comment = await CommentsTableTestHelper.findCommentsById('comment-123')
       expect(comment).toHaveLength(1)
-      expect(comment[0].is_delete).toBe('true')
+      expect(comment[0].is_delete).toBe(true)
     })
   })
 
@@ -165,13 +167,13 @@ describe('CommentRepositoryPostgres', () => {
 
       // Assert
       expect(commentRepository.length).toBe(1)
-      expect(commentRepository[0]).toEqual(new Comment({
+      expect(commentRepository[0]).toEqual(new DetailComment({
         id: 'comment-123',
-        content: 'siapa sangka',
-        date,
         username: 'dicoding',
-        is_delete: 'false',
-        count: '0'
+        date,
+        content: 'siapa sangka',
+        is_delete: false,
+        replies: []
       }))
     })
   })

@@ -20,6 +20,7 @@ const AuthenticationsTableTestHelper = {
 
     return result.rows
   },
+
   async cleanTable () {
     await pool.query('DELETE FROM authentications WHERE 1=1')
   }

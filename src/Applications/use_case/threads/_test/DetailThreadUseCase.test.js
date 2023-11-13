@@ -13,26 +13,22 @@ describe('AddThreadUseCase', () => {
 
     const mockReply = [{
       id: 'reply-123',
-      owner: 'user-456',
-      commentId: 'comment-123',
+      username: 'haha',
       date: new Date().toISOString(),
-      content: 'y',
-      isDelete: false
+      content: 'y'
     }]
 
     const mockComment = [{
       id: 'comment-123',
-      owner: 'user-234',
-      threadId: 'thread-123',
+      username: 'hihi',
       date: new Date().toISOString(),
       content: 'lu sok asik',
-      isDelete: false,
       replies: [{ ...mockReply[0] }]
     }]
 
     const mockThread = new DetailThread({
       id: 'thread-123',
-      owner: 'user-123',
+      username: 'haha',
       date: new Date().toISOString(),
       title: 'Sebuah Thread',
       content: 'Bagaimana Mungkin',
@@ -43,11 +39,21 @@ describe('AddThreadUseCase', () => {
     const mockCommentRepository = new CommentRepository()
     const mockReplyRepository = new ReplyRepository()
 
-    mockThreadRepository.getThreadById = jest.fn(() => Promise.resolve(mockThread))
-    mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(
-      mockComment
-    ))
-    mockReplyRepository.getRepliesByCommentId = jest.fn(() => Promise.resolve(mockReply))
+    mockThreadRepository.getThreadById = jest.fn(() => Promise.resolve({
+      id: 'thread-123',
+      username: 'haha',
+      date: mockThread.date,
+      title: 'Sebuah Thread',
+      content: 'Bagaimana Mungkin'
+    }))
+    mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(mockComment))
+
+    mockReplyRepository.getRepliesByCommentId = jest.fn(() => Promise.resolve([{
+      id: 'reply-123',
+      username: 'haha',
+      date: mockReply[0].date,
+      content: 'y'
+    }]))
 
     const detailThreadUseCase = new DetailThreadUseCase({
       commentRepository: mockCommentRepository,

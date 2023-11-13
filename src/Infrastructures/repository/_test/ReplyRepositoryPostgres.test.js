@@ -6,7 +6,7 @@ const InvariantError = require('../../../Commons/exceptions/InvariantError')
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
 const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError')
 const ReplyRepository = require('../../../Domains/replies/ReplyRepository')
-const NewReply = require('../../../Domains/replies/entities/NewReply')
+const AddReply = require('../../../Domains/replies/entities/AddReply')
 const AddedReply = require('../../../Domains/replies/entities/AddedReply')
 const pool = require('../../database/postgres/pool')
 const ReplyRepositoryPostgres = require('../ReplyRepositoryPostgres')
@@ -36,11 +36,9 @@ describe('ReplyRepositoryPostgres', () => {
         await UsersTableTestHelper.addUser({ id: 'user-123' })
         await ThreadsTableTestHelper.addThread({ id: 'thread-123' })
         await CommentsTableTestHelper.addComment({ id: 'comment-123' })
-        const newReply = new NewReply({
+        const addReply = new AddReply({
           owner: 'user-123',
-          threadId: 'thread-123',
           commentId: 'comment-123',
-          date: new Date().toISOString(),
           content: 'sebuah reply'
         })
 
@@ -48,7 +46,7 @@ describe('ReplyRepositoryPostgres', () => {
         const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator)
 
         // Action
-        const addedReply = await replyRepositoryPostgres.addReply(newReply)
+        const addedReply = await replyRepositoryPostgres.addReply(addReply)
 
         // Assert
         const findReplies = await RepliesTableTestHelper.findRepliesById('reply-123')
@@ -63,7 +61,7 @@ describe('ReplyRepositoryPostgres', () => {
 
     describe('verifyReplyExists function', () => {
       const replyParam = {
-        replyId: 'reply-123', commentId: 'comment-123', threadId: 'thread-123', owner: 'user-123'
+        replyId: 'reply-123', commentId: 'comment-123', owner: 'user-123'
       }
       it('should throw NotFoundError when replyId, commentid, and threadId is not available', async () => {
         // Arrange
@@ -158,7 +156,7 @@ describe('ReplyRepositoryPostgres', () => {
 
         // Action
 
-        const replies = await replyRepositoryPostgres.getReplyByCommentId('comment-123')
+        const replies = await replyRepositoryPostgres.getRepliesByCommentId('comment-123')
 
         // Assert
         expect(replies[0]).toHaveProperty('id')

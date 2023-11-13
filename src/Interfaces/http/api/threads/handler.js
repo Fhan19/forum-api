@@ -9,11 +9,10 @@ class ThreadsHandler {
   }
 
   async postThreadHandler (request, h) {
-    const { title, content } = request.payload
+    const { title, body: content } = request.payload
     const { id: owner } = request.auth.credentials
-    const date = new Date().toISOString()
     const newThread = {
-      owner, date, title, content
+      owner, title, content
     }
 
     const addedThread = await this._addThreadUseCase.execute(newThread)

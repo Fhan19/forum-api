@@ -5,12 +5,11 @@ class DetailReply {
     this._verifyPayload(payload)
 
     const {
-      id, owner, commentId, date, content, isDelete
+      id, username, date, content, isDelete
     } = payload
 
     this.id = id
-    this.owner = owner
-    this.commentId = commentId
+    this.username = username
     this.date = date
     this.content = (isDelete) ? DetailReply.DELETED_REPLY_CONTENT : content
   }
@@ -25,14 +24,13 @@ class DetailReply {
     }
   }
 
-  _isPayloadNotContainNeededProperty ({ id, owner, commentId, date, content, isDelete }) {
-    return !id || !owner || !commentId || !date || !content || isDelete === undefined
+  _isPayloadNotContainNeededProperty ({ id, username, date, content, isDelete }) {
+    return !id || !username || !date || !content || isDelete === undefined
   }
 
-  _isPayloadNotMeetDataTypeSpecification ({ id, owner, commentId, date, content, isDelete }) {
+  _isPayloadNotMeetDataTypeSpecification ({ id, username, date, content, isDelete }) {
     return typeof id !== 'string' ||
-      typeof owner !== 'string' ||
-      typeof commentId !== 'string' ||
+      typeof username !== 'string' ||
       typeof date !== 'string' ||
       typeof content !== 'string' ||
       typeof isDelete !== 'boolean'

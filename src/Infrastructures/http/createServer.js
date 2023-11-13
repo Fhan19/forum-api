@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const Hapi = require('@hapi/hapi')
 const Jwt = require('@hapi/jwt')
 const ClientError = require('../../Commons/exceptions/ClientError')
@@ -8,7 +10,7 @@ const threads = require('../../Interfaces/http/api/threads')
 const comments = require('../../Interfaces/http/api/comments')
 const replies = require('../../Interfaces/http/api/replies')
 
-const createServer = async (injections) => {
+const createServer = async (container) => {
   const server = Hapi.server({
     host: process.env.HOST,
     port: process.env.PORT
@@ -39,25 +41,33 @@ const createServer = async (injections) => {
   await server.register([
     {
       plugin: users,
-      options: { injections }
+      options: { container }
     },
     {
       plugin: authentications,
-      options: { injections }
+      options: { container }
     },
     {
       plugin: threads,
-      options: { injections }
+      options: { container }
     },
     {
       plugin: comments,
-      options: { injections }
+      options: { container }
     },
     {
       plugin: replies,
-      options: { injections }
+      options: { container }
     }
   ])
+
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: () => ({
+      value: 'Hi :)'
+    })
+  })
 
   server.ext('onPreResponse', (request, h) => {
     const { response } = request

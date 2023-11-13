@@ -3,11 +3,11 @@ class DetailThread {
     this._verifyPayload(payload)
 
     const {
-      id, owner, date, title, content, comments
+      id, username, date, title, content, comments
     } = payload
 
     this.id = id
-    this.owner = owner
+    this.username = username
     this.date = date
     this.title = title
     this.content = content
@@ -24,13 +24,13 @@ class DetailThread {
     }
   }
 
-  _isPayloadNotContainNeededProperty ({ id, owner, date, title, content, comments }) {
-    return !id || !owner || !date || !title || !content || !comments
+  _isPayloadNotContainNeededProperty ({ id, username, date, title, content, comments }) {
+    return !id || !username || !date || !title || !content || !comments
   }
 
-  _isPayloadNotMeetDataTypeSpecification ({ id, owner, date, title, content, comments }) {
+  _isPayloadNotMeetDataTypeSpecification ({ id, username, date, title, content, comments }) {
     return typeof id !== 'string' ||
-    typeof owner !== 'string' ||
+    typeof username !== 'string' ||
     typeof date !== 'string' ||
     typeof title !== 'string' ||
     typeof content !== 'string' ||

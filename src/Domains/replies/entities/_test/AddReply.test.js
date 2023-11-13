@@ -16,7 +16,6 @@ describe('an AddReply entities', () => {
     // Arrange
     const payload = {
       owner: true,
-      date: 'abc',
       commentId: 'abc',
       content: 'abc'
     }
@@ -30,18 +29,16 @@ describe('an AddReply entities', () => {
     const payload = {
       owner: 'user-123',
       commentId: 'comment-123',
-      date: new Date().toISOString(),
       content: 'abc'
     }
 
     // Action
     const {
-      owner, date, commentId, content
+      owner, commentId, content
     } = new AddReply(payload)
 
     // Assert
     expect(owner).toEqual(payload.owner)
-    expect(date).toEqual(payload.date)
     expect(commentId).toEqual(payload.commentId)
     expect(content).toEqual(payload.content)
   })

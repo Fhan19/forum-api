@@ -17,11 +17,10 @@ describe('a DetailComment entities', () => {
     // Arrange
     const payload = {
       id: 123,
-      owner: 'user-123',
-      threadId: 'thread-123',
+      username: 'user-123',
       date: new Date().toISOString(),
       content: 'aowkaowk',
-      isDelete: false,
+      is_delete: false,
       replies: {}
     }
 
@@ -33,23 +32,21 @@ describe('a DetailComment entities', () => {
     // Arrange
     const payload = {
       id: 'comment-123',
-      owner: 'user-123',
-      threadId: 'thread-123',
+      username: 'haha',
       date: new Date().toISOString(),
       content: 'aowkaowk',
-      isDelete: true,
+      is_delete: true,
       replies: []
     }
 
     // Action
     const {
-      id, owner, threadId, date, content, replies
+      id, username, date, content, replies
     } = new DetailComment(payload)
 
     // Assert
     expect(id).toEqual(payload.id)
-    expect(owner).toEqual(payload.owner)
-    expect(threadId).toEqual(payload.threadId)
+    expect(username).toEqual(payload.username)
     expect(date).toEqual(payload.date)
     expect(content).toEqual(DetailComment.DELETED_CONTENT_COMMENT)
     expect(replies).toEqual(payload.replies)

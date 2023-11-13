@@ -1,12 +1,14 @@
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper')
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
-const ThreadRepository = require('../../../Domains/replies/ThreadRepository')
+const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
 const AddedThread = require('../../../Domains/threads/entities/AddedThread')
-const NewThread = require('../../../Domains/threads/entities/NewThread')
-const Thread = require('../../../Domains/threads/entities/Thread')
+const AddThread = require('../../../Domains/threads/entities/AddThread')
+const DetailThread = require('../../../Domains/threads/entities/DetailThread')
 const pool = require('../../database/postgres/pool')
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres')
+const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
+const ReplyRepositoryPostgres = require('../ReplyRepositoryPostgres')
 
 describe('ThreadRepositoryPostgres', () => {
   it('should be instance of CommentRepository domain', () => {
@@ -29,16 +31,16 @@ describe('ThreadRepositoryPostgres', () => {
       it('should persist new thread and return added thread correctly', async () => {
         // Arrange
         await UsersTableTestHelper.addUser({ username: 'dicoding' })
-        const newThread = new NewThread({
+        const addThread = new AddThread({
           title: 'sebuah thread',
-          content: 'bagaimana mungkin',
+          body: 'bagaimana mungkin',
           owner: 'user-123'
         })
         const fakeIdGenerator = () => '123'
         const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator)
 
         // Action
-        await threadRepositoryPostgres.addThread(newThread)
+        await threadRepositoryPostgres.addThread(addThread)
 
         // Assert
         const thread = await ThreadsTableTestHelper.findThreadById('thread-123')
@@ -48,22 +50,22 @@ describe('ThreadRepositoryPostgres', () => {
       it('should return added thread correctly', async () => {
         // Arrange
         await UsersTableTestHelper.addUser({ username: 'dicoding' })
-        const newThread = new NewThread({
+        const addThread = new AddThread({
           title: 'sebuah thread',
-          content: 'bagaimana mungkin',
+          body: 'bagaimana mungkin',
           owner: 'user-123'
         })
         const fakeIdGenerator = () => '123'
         const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator)
 
         // Action
-        const addedThread = await threadRepositoryPostgres.addThread(newThread)
+        const addedThread = await threadRepositoryPostgres.addThread(addThread)
 
         // Assert
         expect(addedThread).toStrictEqual(new AddedThread({
           id: 'thread-123',
-          title: newThread.title,
-          owner: newThread.owner
+          title: addThread.title,
+          owner: addThread.owner
         }))
       })
     })
@@ -102,17 +104,32 @@ describe('ThreadRepositoryPostgres', () => {
         const date = new Date().toISOString()
         await UsersTableTestHelper.addUser({ username: 'dicoding' })
         await ThreadsTableTestHelper.addThread({ date, title: 'sebuah thread' })
+        const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
+        const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {})
         const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
 
         // Action & Assert
         const thread = await threadRepositoryPostgres.getThreadById('thread-123')
+        const comments = await commentRepositoryPostgres.getCommentsByThreadId('thread-123')
+        const res = []
+
+        for (const comment of comments) {
+          res.push({
+            ...comment,
+            replies: await replyRepositoryPostgres.getRepliesByCommentId(comment.id)
+          })
+        }
+
+        const detailThread = { ...thread, comments: res }
+
         await expect(threadRepositoryPostgres.getThreadById('thread-123')).resolves.not.toThrowError(NotFoundError)
-        expect(thread).toEqual(new Thread({
+        expect(detailThread).toEqual(new DetailThread({
           id: 'thread-123',
+          username: 'dicoding',
+          date,
           title: 'sebuah thread',
           content: 'bagaimana mungkin',
-          date,
-          username: 'dicoding'
+          comments: res
         }))
       })
     })
