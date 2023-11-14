@@ -40,6 +40,10 @@ describe('CommentRepositoryPostgres', () => {
       // Assert
       const comment = await CommentsTableTestHelper.findCommentsById('comment-123')
       expect(comment).toHaveLength(1)
+      expect(comment[0].id).toEqual('comment-123')
+      expect(comment[0].owner).toEqual('user-123')
+      expect(comment[0].thread_id).toEqual('thread-123')
+      expect(comment[0].content).toEqual('sebuah komentar')
     })
 
     it('should return added comment correctly', async () => {

@@ -45,6 +45,10 @@ describe('ThreadRepositoryPostgres', () => {
         // Assert
         const thread = await ThreadsTableTestHelper.findThreadById('thread-123')
         expect(thread).toHaveLength(1)
+        expect(thread[0].id).toEqual('thread-123')
+        expect(thread[0].owner).toEqual('user-123')
+        expect(thread[0].title).toEqual('sebuah thread')
+        expect(thread[0].content).toEqual('bagaimana mungkin')
       })
 
       it('should return added thread correctly', async () => {
