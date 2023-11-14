@@ -18,7 +18,7 @@ DomainErrorTranslator._directories = {
   'DELETE_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN': new InvariantError('harus mengirimkan token refresh'),
   'DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token harus string'),
   'THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('harus mengirimkan body dan title'),
-  'THREAD.NOT_MEET_DATA_TYPE_PROPERTY': new InvariantError('title dan body harus string'),
+  'THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('title dan body harus string'),
   'ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('balasan tidak boleh kosong'),
   'ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('property harus string'),
   'NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('komentar tidak boleh kosong'),
