@@ -67,7 +67,7 @@ describe('AddThreadUseCase', () => {
     // Assert
     expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload)
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(useCasePayload)
-    expect(mockReplyRepository.getRepliesByCommentId).toBeCalledWith(mockComment[0].id)
+    expect(mockReplyRepository.getRepliesByCommentId).toBeCalledWith('comment-123')
     expect(detailThread).toStrictEqual(mockThread)
   })
 })
