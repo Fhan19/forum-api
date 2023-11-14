@@ -1,9 +1,10 @@
+const AddCommentUseCase = require('../../../../Applications/use_case/comments/AddCommentUseCase')
+const DeleteCommentUseCase = require('../../../../Applications/use_case/comments/DeleteCommentUseCase')
 const autoBind = require('auto-bind')
 
 class CommentsHandler {
-  constructor ({ addCommentUseCase, deleteCommentUseCase }) {
-    this._addCommentUseCase = addCommentUseCase
-    this._deleteCommentUseCase = deleteCommentUseCase
+  constructor (container) {
+    this._container = container
 
     autoBind(this)
   }
@@ -18,7 +19,9 @@ class CommentsHandler {
       owner, threadId, date, content
     }
 
-    const addedComment = await this._addCommentUseCase.execute(newComment)
+    const addCommentUseCase = await this._container.getInstance(AddCommentUseCase.name)
+
+    const addedComment = await addCommentUseCase.execute(newComment)
 
     const response = h.response({
       status: 'success',
@@ -38,7 +41,9 @@ class CommentsHandler {
       commentId, threadId, owner
     }
 
-    await this._deleteCommentUseCase.execute(deleteComment)
+    const deleteCommentUseCase = await this._container.getInstance(DeleteCommentUseCase.name)
+
+    await deleteCommentUseCase.execute(deleteComment)
 
     const response = h.response({
       status: 'success'

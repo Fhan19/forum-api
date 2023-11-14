@@ -1,24 +1,26 @@
+const AddReplyUseCase = require('../../../../Applications/use_case/replies/AddReplyUseCase')
+const DeleteReplyUseCase = require('../../../../Applications/use_case/replies/DeleteReplyUseCase')
 const autoBind = require('auto-bind')
 
 class RepliesHandler {
-  constructor ({ addReplyUseCase, deleteReplyUseCase }) {
-    this._addReplyUseCase = addReplyUseCase
-    this._deleteReplyUseCase = deleteReplyUseCase
+  constructor (container) {
+    this._container = container
 
     autoBind(this)
   }
 
   async postReplyHandler (request, h) {
-    const { content } = request.payload
+    const { body: content } = request.payload
     const { id: owner } = request.auth.credentials
     const { threadId, commentId } = request.params
-    const date = new Date().toISOString()
 
     const newReply = {
-      owner, threadId, commentId, date, content
+      owner, threadId, commentId, content
     }
 
-    const addedReply = await this._addReplyUseCase.execute(newReply)
+    const addReplyUseCase = await this._container.getInstance(AddReplyUseCase.name)
+
+    const addedReply = await addReplyUseCase.execute(newReply)
 
     const response = h.response({
       status: 'success',
@@ -38,7 +40,9 @@ class RepliesHandler {
       owner, replyId, commentId, threadId
     }
 
-    await this._deleteReplyUseCase.execute(deleteReply)
+    const deleteReplyUseCase = await this._container.getInstance(DeleteReplyUseCase.name)
+
+    await deleteReplyUseCase.execute(deleteReply)
 
     const response = h.response({
       status: 'success'
