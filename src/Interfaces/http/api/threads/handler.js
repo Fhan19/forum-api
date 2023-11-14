@@ -34,11 +34,13 @@ class ThreadsHandler {
 
     const detailThreadUseCase = await this._container.getInstance(DetailThreadUseCase.name)
     const detailThread = await detailThreadUseCase.execute(threadId)
+    detailThread.body = detailThread.content
+    delete detailThread.content
 
     const response = h.response({
       status: 'success',
       data: {
-        detailThread
+        thread: detailThread
       }
     })
     response.code(200)
