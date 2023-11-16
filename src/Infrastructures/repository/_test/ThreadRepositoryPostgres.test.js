@@ -8,7 +8,6 @@ const DetailThread = require('../../../Domains/threads/entities/DetailThread')
 const pool = require('../../database/postgres/pool')
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres')
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
-const ReplyRepositoryPostgres = require('../ReplyRepositoryPostgres')
 
 describe('ThreadRepositoryPostgres', () => {
   it('should be instance of CommentRepository domain', () => {
@@ -109,7 +108,6 @@ describe('ThreadRepositoryPostgres', () => {
         await UsersTableTestHelper.addUser({ username: 'dicoding' })
         await ThreadsTableTestHelper.addThread({ date, title: 'sebuah thread' })
         const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
-        const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {})
         const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
 
         // Action & Assert
@@ -117,14 +115,7 @@ describe('ThreadRepositoryPostgres', () => {
         const comments = await commentRepositoryPostgres.getCommentsByThreadId('thread-123')
         const res = []
 
-        for (const comment of comments) {
-          res.push({
-            ...comment,
-            replies: await replyRepositoryPostgres.getRepliesByCommentId(comment.id)
-          })
-        }
-
-        const detailThread = { ...thread, comments: res }
+        const detailThread = { ...thread, comments }
 
         await expect(threadRepositoryPostgres.getThreadById('thread-123')).resolves.not.toThrowError(NotFoundError)
         expect(detailThread).toEqual(new DetailThread({
