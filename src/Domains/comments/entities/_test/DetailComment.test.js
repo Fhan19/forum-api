@@ -20,8 +20,7 @@ describe('a DetailComment entities', () => {
       username: 'user-123',
       date: new Date().toISOString(),
       content: 'aowkaowk',
-      is_delete: false,
-      replies: {}
+      is_delete: false
     }
 
     // Action and Assert
@@ -35,13 +34,34 @@ describe('a DetailComment entities', () => {
       username: 'haha',
       date: new Date().toISOString(),
       content: 'aowkaowk',
-      is_delete: true,
-      replies: []
+      is_delete: false
     }
 
     // Action
     const {
-      id, username, date, content, replies
+      id, username, date, content
+    } = new DetailComment(payload)
+
+    // Assert
+    expect(id).toEqual(payload.id)
+    expect(username).toEqual(payload.username)
+    expect(date).toEqual(payload.date)
+    expect(content).toEqual(payload.content)
+  })
+
+  it('should create deleted DetailComment object correctly', () => {
+    // Arrange
+    const payload = {
+      id: 'comment-123',
+      username: 'haha',
+      date: new Date().toISOString(),
+      content: 'aowkaowk',
+      is_delete: true
+    }
+
+    // Action
+    const {
+      id, username, date, content
     } = new DetailComment(payload)
 
     // Assert
@@ -49,6 +69,5 @@ describe('a DetailComment entities', () => {
     expect(username).toEqual(payload.username)
     expect(date).toEqual(payload.date)
     expect(content).toEqual(DetailComment.DELETED_CONTENT_COMMENT)
-    expect(replies).toEqual(payload.replies)
   })
 })

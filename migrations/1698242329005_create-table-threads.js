@@ -19,7 +19,7 @@ exports.up = (pgm) => {
       type: 'TEXT',
       notNull: true
     },
-    content: {
+    body: {
       type: 'TEXT',
       notNull: true
     }

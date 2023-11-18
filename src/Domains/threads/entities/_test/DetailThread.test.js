@@ -21,10 +21,8 @@ describe('a DetailThread entities', () => {
       username: 'hehe',
       date: new Date().toISOString(),
       title: 'sebuah thread',
-      content: 'aowkawokaowk',
-      comments: [{
-        replies: {}
-      }]
+      body: 'aowkawokaowk',
+      comments: [{}]
     }
 
     // Action and Assert
@@ -38,30 +36,25 @@ describe('a DetailThread entities', () => {
       username: 'haha',
       date: new Date().toISOString(),
       title: 'sebuah thread',
-      content: 'aowkawokaowk',
+      body: 'aowkawokaowk',
       comments: [{
         id: 'comment-123',
         content: 'wkwkwk',
-        username: 'Hihi',
-        replies: [{
-          id: 'reply-123',
-          content: 'y',
-          username: 'Huhu'
-        }]
+        date: new Date().toISOString(),
+        username: 'Hihi'
       }]
     }
 
     // Action
     const {
-      id, username, title, content, comments
+      id, username, title, body, comments
     } = new DetailThread(payload)
 
     // Assert
     expect(id).toEqual(payload.id)
     expect(username).toEqual(payload.username)
     expect(title).toEqual(payload.title)
-    expect(content).toEqual(payload.content)
+    expect(body).toEqual(payload.body)
     expect(comments[0].id).toEqual(payload.comments[0].id)
-    expect(comments[0].replies[0].id).toEqual(payload.comments[0].replies[0].id)
   })
 })

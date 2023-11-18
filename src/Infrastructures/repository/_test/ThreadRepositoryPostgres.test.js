@@ -47,7 +47,7 @@ describe('ThreadRepositoryPostgres', () => {
         expect(thread[0].id).toEqual('thread-123')
         expect(thread[0].owner).toEqual('user-123')
         expect(thread[0].title).toEqual('sebuah thread')
-        expect(thread[0].content).toEqual('bagaimana mungkin')
+        expect(thread[0].body).toEqual('bagaimana mungkin')
       })
 
       it('should return added thread correctly', async () => {
@@ -113,7 +113,6 @@ describe('ThreadRepositoryPostgres', () => {
         // Action & Assert
         const thread = await threadRepositoryPostgres.getThreadById('thread-123')
         const comments = await commentRepositoryPostgres.getCommentsByThreadId('thread-123')
-        const res = []
 
         const detailThread = { ...thread, comments }
 
@@ -123,8 +122,8 @@ describe('ThreadRepositoryPostgres', () => {
           username: 'dicoding',
           date,
           title: 'sebuah thread',
-          content: 'bagaimana mungkin',
-          comments: res
+          body: 'bagaimana mungkin',
+          comments: []
         }))
       })
     })

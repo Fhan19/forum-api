@@ -63,7 +63,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const results = await this._pool.query(query)
 
-    return results.rows.map((result) => new DetailComment({ ...result, replies: [] }))
+    return results.rows.map((result) => new DetailComment({ ...result }))
   }
 
   async verifyCommentExists (id) {

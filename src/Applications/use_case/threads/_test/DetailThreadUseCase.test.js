@@ -14,8 +14,7 @@ describe('AddThreadUseCase', () => {
       id: 'comment-123',
       username: 'hihi',
       date: new Date().toISOString(),
-      content: 'lu sok asik',
-      replies: []
+      content: 'lu sok asik'
     }]
 
     const mockThread = new DetailThread({
@@ -23,7 +22,7 @@ describe('AddThreadUseCase', () => {
       username: 'haha',
       date: new Date().toISOString(),
       title: 'Sebuah Thread',
-      content: 'Bagaimana Mungkin',
+      body: 'Bagaimana Mungkin',
       comments: [{ ...mockComment[0] }]
     })
 
@@ -35,7 +34,7 @@ describe('AddThreadUseCase', () => {
       username: 'haha',
       date: mockThread.date,
       title: 'Sebuah Thread',
-      content: 'Bagaimana Mungkin'
+      body: 'Bagaimana Mungkin'
     }))
     mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(mockComment))
 
