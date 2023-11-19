@@ -8,8 +8,15 @@ const DetailComment = require('../../../Domains/comments/entities/DetailComment'
 const AddComment = require('../../../Domains/comments/entities/AddComment')
 const pool = require('../../database/postgres/pool')
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
+const CommentRepository = require('../../../Domains/comments/CommentRepository')
 
 describe('CommentRepositoryPostgres', () => {
+  it('should be instance of ThreadRepository domain', () => {
+    const commentRepositoryPostgres = new CommentRepositoryPostgres({}, {})
+
+    expect(commentRepositoryPostgres).toBeInstanceOf(CommentRepository)
+  })
+
   afterEach(async () => {
     await UsersTableTestHelper.cleanTable()
     await ThreadsTableTestHelper.cleanTable()
@@ -176,8 +183,29 @@ describe('CommentRepositoryPostgres', () => {
         username: 'dicoding',
         date,
         content: 'siapa sangka',
-        is_delete: false,
-        replies: []
+        is_delete: false
+      }))
+    })
+
+    it('should return deleted comment correctly', async () => {
+      // Arrange
+      const date = new Date().toISOString()
+      await UsersTableTestHelper.addUser({ username: 'dicoding' })
+      await ThreadsTableTestHelper.addThread({ title: 'sebuah thread' })
+      await CommentsTableTestHelper.addComment({ date, content: 'siapa sangka', isDelete: true })
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
+
+      // Action
+      const commentRepository = await commentRepositoryPostgres.getCommentsByThreadId('thread-123')
+
+      // Assert
+      expect(commentRepository.length).toBe(1)
+      expect(commentRepository[0]).toEqual(new DetailComment({
+        id: 'comment-123',
+        username: 'dicoding',
+        date,
+        content: 'siapa sangka',
+        is_delete: true
       }))
     })
   })

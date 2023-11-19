@@ -10,10 +10,10 @@ const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres')
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
 
 describe('ThreadRepositoryPostgres', () => {
-  it('should be instance of CommentRepository domain', () => {
-    const replyRepositoryPostgres = new ThreadRepositoryPostgres({}, {})
+  it('should be instance of ThreadRepository domain', () => {
+    const threadRepositoryPostgres = new ThreadRepositoryPostgres({}, {})
 
-    expect(replyRepositoryPostgres).toBeInstanceOf(ThreadRepository)
+    expect(threadRepositoryPostgres).toBeInstanceOf(ThreadRepository)
   })
 
   describe('behavior test', () => {
